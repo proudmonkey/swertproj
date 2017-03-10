@@ -1,0 +1,82 @@
+﻿
+@{
+    ViewBag.Title = "BetSummary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model Swertres.Web.Models.ViewModels.DrawModel
+
+<h2>Bet Overall Summary</h2>
+<hr/>
+
+<div class="row">
+    <div class="col-xs-2">
+        @Html.HiddenFor(model => model.DrawID)
+        @Html.LabelFor(model => model.ControlNumber, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.ControlNumber, new { htmlAttributes = new { @class = "form-control", @readonly = "readony" } })
+    </div>
+    <div class="col-xs-2">
+        @Html.LabelFor(model => model.SelectedDrawTime, htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.SelectedDrawTime, new { htmlAttributes = new { @class = "form-control", @readonly = "readony" } })
+    </div>
+</div>
+
+<div id="divBetList">
+    @Html.Action("BetSummaryPartial", "Encoding", new { drawID = Model.DrawID })
+</div>
+
+<div id="divBetExcessList" style="display:none;">
+    @Html.Action("BetExcessSummaryPartial", "Encoding", new { drawID = Model.DrawID })
+</div>
+
+
+<button id="btnPrint" class="btn btn-primary btn-lg">Print</button>
+<button id="btnPrintExcess" class="btn btn-primary btn-lg">Print Excess Only</button>
+
+@section scripts
+{
+    @Scripts.Render("~/Scripts/jquery.signalR-2.2.1.min.js")
+    @Scripts.Render("~/signalr/hubs")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var bets = $.connection.summaryHub;
+            bets.client.updateSummaryData = function () {
+                fetchLiveData();
+            };
+
+            $.connection.hub.start();
+
+            $("#btnPrint").on("click", function () {
+                var divContents = $("#divBetList").html();
+                var printWindow = window.open('', '', 'height=400,width=800');
+                printWindow.document.write('<html><head><title>Summary</title>');
+                printWindow.document.write('</head><body >');
+                printWindow.document.write(divContents);
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+                printWindow.print();
+            });
+
+            $("#btnPrintExcess").on("click", function () {
+                var divContents = $("#divBetExcessList").html();
+                var printWindow = window.open('', '', 'height=400,width=800');
+                printWindow.document.write('<html><head><title>Excess Summary</title>');
+                printWindow.document.write('</head><body >');
+                printWindow.document.write(divContents);
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+                printWindow.print();
+            });
+        });
+
+        function fetchLiveData() {
+            var drawID = @Html.Raw(Json.Encode(Model.DrawID));
+            var url = "/Encoding/BetSummaryPartial/?drawID=" + drawID;
+            var url2 = "/Encoding/BetExcessSummaryPartial/?drawID=" + drawID;
+
+            $("#divBetList").load(url);
+            $("#divBetExcessList").load(url2);
+        }
+    </script>
+}

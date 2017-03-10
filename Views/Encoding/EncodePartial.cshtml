@@ -1,0 +1,29 @@
+﻿
+@model List<Swertres.Web.Models.ViewModels.BetModel>
+<div>
+    <table class="table table-striped table-condensed table-hover">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Amount</th>
+                <th>Is Double?</th>
+                <th>Is Rumble?</th>
+                <th>Source</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr>
+                    <td> @Html.DisplayFor(m => i.Number)</td>
+                    <td> @Html.DisplayFor(m => i.Amount)</td>
+                    <td> @Html.DisplayFor(m => i.IsDouble)</td>
+                    <td> @Html.DisplayFor(m => i.IsRumble)</td>
+                    <td> @Html.DisplayFor(m => i.SourceName)</td>
+                    <td><a href="javascript:void(0)" class="lnkEdit">Edit</a></td>
+                    <td><a href="javascript:void(0)" class="lnkDelete">Delete</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

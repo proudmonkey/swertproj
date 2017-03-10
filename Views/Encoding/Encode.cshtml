@@ -1,0 +1,163 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Encoding</h2>
+<div id="divAlert" class="alert alert-danger hidden">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Warning!</strong> No active draw.
+</div>
+<hr />
+@model Swertres.Web.Models.ViewModels.EncodeDetailModel
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div id="divMain" class="row">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+        <div class="row">
+            <div class="col-xs-2">
+                @Html.HiddenFor(model => model.Draw.DrawID)
+                @Html.LabelFor(model => model.Draw.ControlNumber, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Draw.ControlNumber, new { htmlAttributes = new { @class = "form-control", @readonly = "readony" } })
+            </div>
+            <div class="col-xs-2">
+                @Html.LabelFor(model => model.Draw.SelectedDrawTime, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Draw.SelectedDrawTime, new { htmlAttributes = new { @class = "form-control", @readonly = "readony" } })
+            </div>
+            <div class="col-xs-4">
+                @Html.LabelFor(model => model.Coordinators.SelectedSourceID, htmlAttributes: new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.Coordinators.SelectedSourceID,
+                        new SelectList(Model.Coordinators.Sources, "SourceID", "SourceName"), "-Select-", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Coordinators.SelectedSourceID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2">
+                @Html.LabelFor(model => model.Bet.Number, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Bet.Number, new { htmlAttributes = new { @class = "form-control input-lg", @maxlength = "3", @inputmode = "numeric", @pattern = "([0-9]{3})" } })
+                @Html.ValidationMessageFor(model => model.Bet.Number, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-xs-2">
+                @Html.LabelFor(model => model.Bet.Amount, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Bet.Amount, new { htmlAttributes = new { @class = "form-control input-lg", @maxlength = "3", @inputmode = "numeric" } })
+                @Html.ValidationMessageFor(model => model.Bet.Amount, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-xs-2">
+                @Html.LabelFor(model => model.Bet.IsDouble, htmlAttributes: new { @class = "control-label" })
+                <br />
+                @Html.CheckBoxFor(model => model.Bet.IsDouble)
+                @Html.ValidationMessageFor(model => model.Bet.IsDouble, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-xs-2">
+                @Html.LabelFor(model => model.Bet.IsRumble, htmlAttributes: new { @class = "control-label" })
+                <br />
+                @Html.CheckBoxFor(model => model.Bet.IsRumble)
+                @Html.ValidationMessageFor(model => model.Bet.IsRumble, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-xs-2">
+                <div style="margin-top:25px;">
+                    <input type="submit" value="Post" class="btn btn-primary btn-lg" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<hr/>
+<div class="row">
+    <div class="col-lg-2">
+        <label class="control-label">Filter By Coordinator:</label>
+    </div>
+    <div class="col-xs-2">
+        @Html.DropDownListFor(model => model.Coordinators.SelectedSourceID,
+                        new SelectList(Model.Coordinators.Sources, "SourceID", "SourceName"), "-All-", new { @class = "form-control", @id="ddlSourceSearch", @name= "ddlSourceSearch" })
+    </div>
+    </div>
+<div id="divBetList">
+    @Html.Action("EncodePartial", "Encoding", new { drawID = Model.Draw.DrawID })
+</div>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            CheckActiveDraw();
+            clearText();
+
+        var cbDouble = $("#Bet_IsDouble");
+        var cbRumble = $("#Bet_IsRumble");
+
+        $("#Bet_Number").keyup(function (e) {
+            if (/\D/g.test(this.value)) {
+                // Filter non-digits from input value.
+                this.value = this.value.replace(/\D/g, '');
+            }
+            else {
+                if (!isUnique($(this).val())) {
+                    cbDouble.prop('checked', true);
+                    cbRumble.prop('checked', true);
+                }
+                else {
+                    cbDouble.removeAttr('checked');
+                    cbRumble.removeAttr('checked');
+                }
+            }
+        });
+
+        $("#Bet_Amount").keyup(function (e) {
+            if (/\D/g.test(this.value)) {
+                this.value = this.value.replace(/\D/g, '');
+            }
+        });
+
+        $("#ddlSourceSearch").change(function () {
+            var drawID = @Html.Raw(Json.Encode(Model.Draw.DrawID));
+            var sourceID = $(this).val();
+            var url = "/Encoding/EncodePartial/?drawID=" + drawID + "&sourceID=" + sourceID;
+            $("#divBetList").load(url);
+        });
+    });
+
+
+    function clearText() {
+        $("#Bet_Number").val("");
+        $("#Bet_Amount").val("");
+        $("#Bet_IsDouble").removeAttr('checked');
+        $("#Bet_IsRumble").removeAttr('checked');
+        $("#Bet_Number").focus();
+    }
+
+    function isUnique(str) {
+        var hashtable = {};
+        for (var i = 0, len = str.length; i < len; i++) {
+            if (hashtable[str[i]] != null) {
+                hashtable[str[i]] = 1;
+                return false;
+            } else {
+                hashtable[str[i]] = 0;
+            }
+        }
+        return true;
+    }
+
+    function CheckActiveDraw(){
+
+        var cn = $("#Draw_ControlNumber").val();
+        if(cn.length == 0){
+            $("#divMain :input").prop('disabled',true);
+            $("#divAlert").toggleClass("hidden");
+        }
+        else{
+            $("#divMain :input").removeAttr('disabled');
+        }
+    }
+    </script>
+}

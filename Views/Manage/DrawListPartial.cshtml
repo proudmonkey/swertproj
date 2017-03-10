@@ -1,0 +1,33 @@
+﻿
+
+@model Swertres.Web.Models.ViewModels.DrawListModel
+<div>
+    <h3>List of Draws</h3>
+    <table class="table table-striped table-condensed table-hover">
+        <thead>
+            <tr>
+                <th colspan="2">Control Number</th>
+                <th>Draw Time</th>
+                <th>Has Ended?</th>
+                <th colspan="2"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model.DrawList)
+            {
+                <tr>
+                    <td> @Html.DisplayFor(m => i.ControlNumber)</td>
+                    <td> @Html.HiddenFor(m => i.DrawID)</td>
+                    <td> @Html.DisplayFor(m => i.SelectedDrawTime)</td>
+                    <td> @Html.DisplayFor(m => i.IsEnded)</td>
+                    <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" id="btnEdit">Edit</button></td>
+                    <td><button type="button" class="btn btn-info btn-sm" id="btnCloseDraw">Close</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+

@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SwertresModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Bet">
+          <Key>
+            <PropertyRef Name="BetID" />
+          </Key>
+          <Property Name="BetID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DrawID" Type="bigint" Nullable="false" />
+          <Property Name="Number" Type="int" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="IsRumble" Type="bit" Nullable="false" />
+          <Property Name="RowCreatedUserID" Type="bigint" />
+          <Property Name="RowModifiedUserID" Type="bigint" />
+          <Property Name="RowCreatedDateTime" Type="datetime" />
+          <Property Name="RowModifiedDateTime" Type="datetime" />
+          <Property Name="IsDouble" Type="bit" Nullable="false" />
+          <Property Name="SourceID" Type="bigint" />
+        </EntityType>
+        <EntityType Name="BetLimit">
+          <Key>
+            <PropertyRef Name="BetLimitID" />
+          </Key>
+          <Property Name="BetLimitID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NormalLimit" Type="int" />
+          <Property Name="RumbleLimit" Type="int" />
+        </EntityType>
+        <EntityType Name="Draw">
+          <Key>
+            <PropertyRef Name="DrawID" />
+          </Key>
+          <Property Name="DrawID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ControlNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="StartDateTime" Type="datetime" />
+          <Property Name="RowCreatedDateTime" Type="datetime" />
+          <Property Name="RowModifiedDateTime" Type="datetime" />
+          <Property Name="RowCreatedUserID" Type="bigint" />
+          <Property Name="RowModifiedUserID" Type="bigint" />
+          <Property Name="IsEnded" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar" MaxLength="50" />
+          <Property Name="RoleDescription" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Source">
+          <Key>
+            <PropertyRef Name="SourceID" />
+          </Key>
+          <Property Name="SourceID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SourceName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="UserRoleID" />
+          </Key>
+          <Property Name="UserRoleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="bigint" Nullable="false" />
+          <Property Name="RoleID" Type="int" Nullable="false" />
+        </EntityType>
+        <Function Name="GetBetOverAllSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DrawID" Type="bigint" Mode="In" />
+        </Function>
+        <EntityContainer Name="SwertresModelStoreContainer">
+          <EntitySet Name="Bet" EntityType="Self.Bet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BetLimit" EntityType="Self.BetLimit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Draw" EntityType="Self.Draw" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Source" EntityType="Self.Source" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SwertresModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Bet">
+          <Key>
+            <PropertyRef Name="BetID" />
+          </Key>
+          <Property Name="BetID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DrawID" Type="Int64" Nullable="false" />
+          <Property Name="Number" Type="Int32" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="IsRumble" Type="Boolean" Nullable="false" />
+          <Property Name="RowCreatedUserID" Type="Int64" />
+          <Property Name="RowModifiedUserID" Type="Int64" />
+          <Property Name="RowCreatedDateTime" Type="DateTime" Precision="3" />
+          <Property Name="RowModifiedDateTime" Type="DateTime" Precision="3" />
+          <Property Name="IsDouble" Type="Boolean" Nullable="false" />
+          <Property Name="SourceID" Type="Int64" />
+        </EntityType>
+        <EntityType Name="Draw">
+          <Key>
+            <PropertyRef Name="DrawID" />
+          </Key>
+          <Property Name="DrawID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ControlNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="StartDateTime" Type="DateTime" Precision="3" />
+          <Property Name="RowCreatedDateTime" Type="DateTime" Precision="3" />
+          <Property Name="RowModifiedDateTime" Type="DateTime" Precision="3" />
+          <Property Name="RowCreatedUserID" Type="Int64" />
+          <Property Name="RowModifiedUserID" Type="Int64" />
+          <Property Name="IsEnded" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RoleDescription" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="UserRoleID" />
+          </Key>
+          <Property Name="UserRoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int64" Nullable="false" />
+          <Property Name="RoleID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="SwertresEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Bets" EntityType="Self.Bet" />
+          <EntitySet Name="Draws" EntityType="Self.Draw" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="UserRoles" EntityType="Self.UserRole" />
+          <EntitySet Name="Sources" EntityType="SwertresModel.Source" />
+          <EntitySet Name="BetLimits" EntityType="SwertresModel.BetLimit" />
+          <FunctionImport Name="GetBetOverAllSummary" ReturnType="Collection(SwertresModel.GetBetOverAllSummary_Result)">
+            <Parameter Name="DrawID" Mode="In" Type="Int64" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="Source">
+          <Key>
+            <PropertyRef Name="SourceID" />
+          </Key>
+          <Property Name="SourceID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SourceName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="BetLimit">
+          <Key>
+            <PropertyRef Name="BetLimitID" />
+          </Key>
+          <Property Name="BetLimitID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NormalLimit" Type="Int32" />
+          <Property Name="RumbleLimit" Type="Int32" />
+        </EntityType>
+        <ComplexType Name="GetBetOverAllSummary_Result">
+          <Property Type="Int32" Name="Number" Nullable="true" />
+          <Property Type="Decimal" Name="TotalAmountNormal" Nullable="false" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="TotalAmountRumble" Nullable="false" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="TotalAmountNormalExcess" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="TotalAmountRumbleExcess" Nullable="true" Precision="38" Scale="0" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SwertresModelStoreContainer" CdmEntityContainer="SwertresEntities">
+          <EntitySetMapping Name="Bets">
+            <EntityTypeMapping TypeName="SwertresModel.Bet">
+              <MappingFragment StoreEntitySet="Bet">
+                <ScalarProperty Name="SourceID" ColumnName="SourceID" />
+                <ScalarProperty Name="IsDouble" ColumnName="IsDouble" />
+                <ScalarProperty Name="BetID" ColumnName="BetID" />
+                <ScalarProperty Name="DrawID" ColumnName="DrawID" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="IsRumble" ColumnName="IsRumble" />
+                <ScalarProperty Name="RowCreatedUserID" ColumnName="RowCreatedUserID" />
+                <ScalarProperty Name="RowModifiedUserID" ColumnName="RowModifiedUserID" />
+                <ScalarProperty Name="RowCreatedDateTime" ColumnName="RowCreatedDateTime" />
+                <ScalarProperty Name="RowModifiedDateTime" ColumnName="RowModifiedDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Draws">
+            <EntityTypeMapping TypeName="SwertresModel.Draw">
+              <MappingFragment StoreEntitySet="Draw">
+                <ScalarProperty Name="IsEnded" ColumnName="IsEnded" />
+                <ScalarProperty Name="DrawID" ColumnName="DrawID" />
+                <ScalarProperty Name="ControlNumber" ColumnName="ControlNumber" />
+                <ScalarProperty Name="StartDateTime" ColumnName="StartDateTime" />
+                <ScalarProperty Name="RowCreatedDateTime" ColumnName="RowCreatedDateTime" />
+                <ScalarProperty Name="RowModifiedDateTime" ColumnName="RowModifiedDateTime" />
+                <ScalarProperty Name="RowCreatedUserID" ColumnName="RowCreatedUserID" />
+                <ScalarProperty Name="RowModifiedUserID" ColumnName="RowModifiedUserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="SwertresModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="RoleDescription" ColumnName="RoleDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="SwertresModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserRoles">
+            <EntityTypeMapping TypeName="SwertresModel.UserRole">
+              <MappingFragment StoreEntitySet="UserRole">
+                <ScalarProperty Name="UserRoleID" ColumnName="UserRoleID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sources">
+            <EntityTypeMapping TypeName="SwertresModel.Source">
+              <MappingFragment StoreEntitySet="Source">
+                <ScalarProperty Name="SourceName" ColumnName="SourceName" />
+                <ScalarProperty Name="SourceID" ColumnName="SourceID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BetLimits">
+            <EntityTypeMapping TypeName="SwertresModel.BetLimit">
+              <MappingFragment StoreEntitySet="BetLimit">
+                <ScalarProperty Name="RumbleLimit" ColumnName="RumbleLimit" />
+                <ScalarProperty Name="NormalLimit" ColumnName="NormalLimit" />
+                <ScalarProperty Name="BetLimitID" ColumnName="BetLimitID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetBetOverAllSummary" FunctionName="SwertresModel.Store.GetBetOverAllSummary">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SwertresModel.GetBetOverAllSummary_Result">
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="TotalAmountNormal" ColumnName="TotalAmountNormal" />
+                <ScalarProperty Name="TotalAmountRumble" ColumnName="TotalAmountRumble" />
+                <ScalarProperty Name="TotalAmountNormalExcess" ColumnName="TotalAmountNormalExcess" />
+                <ScalarProperty Name="TotalAmountRumbleExcess" ColumnName="TotalAmountRumbleExcess" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

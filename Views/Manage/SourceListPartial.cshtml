@@ -1,0 +1,25 @@
+﻿
+
+@model Swertres.Web.Models.ViewModels.SourceListModel
+<div>
+    <h3>List of Draws</h3>
+    <table class="table table-striped table-condensed table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model.SourceList)
+            {
+                <tr>
+                    <td> @Html.DisplayFor(m => i.SourceID)</td>
+                    <td> @Html.DisplayFor(m => i.SourceName)</td>
+                    <td><a href="javascript:void(0)" class="lnkEdit">Edit</a></td>
+                    <td><a href="javascript:void(0)" class="lnkDelete">Delete</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
