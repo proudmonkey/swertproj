@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Swertres.Web.Models.DataManager;
+using Swertres.Web.Models.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Helpers;
+using System.Web.Mvc;
 using System.Web.Security;
 
 namespace Swertres.Web.Models.Helpers
@@ -33,6 +36,34 @@ namespace Swertres.Web.Models.Helpers
                 generated = num + 1;
 
             return generated.ToString();
+        }
+    }
+
+    public class AuthorizeRolesAttribute : AuthorizeAttribute
+    {
+        private readonly string[] userAssignedRoles;
+        public AuthorizeRolesAttribute(params string[] roles)
+        {
+            this.userAssignedRoles = roles;
+        }
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
+        {
+            bool authorize = false;
+            using (SwertresEntities db = new SwertresEntities())
+            {
+                AdminManager am = new AdminManager();
+                foreach (var roles in userAssignedRoles)
+                {
+                    authorize = am.IsUserInRole(httpContext.User.Identity.Name, roles);
+                    if (authorize)
+                        return authorize;
+                }
+            }
+            return authorize;
+        }
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        {
+            filterContext.Result = new RedirectResult("~/Home/UnAuthorized");
         }
     }
 }

@@ -11,12 +11,10 @@ namespace Swertres.Web.Models.DB
 {
     using System;
     
-    public partial class GetBetOverAllSummary_Result
+    public partial class GetTargetBetSummary_Result1
     {
         public Nullable<int> Number { get; set; }
-        public decimal TotalAmountNormal { get; set; }
-        public decimal TotalAmountRumble { get; set; }
-        public Nullable<decimal> TotalAmountNormalExcess { get; set; }
-        public Nullable<decimal> TotalAmountRumbleExcess { get; set; }
+        public Nullable<int> Total { get; set; }
+        public Nullable<int> TotalExcess { get; set; }
     }
 }

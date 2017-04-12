@@ -1,0 +1,27 @@
+﻿@model List<Swertres.Web.Models.ViewModels.BetSummaryModel>
+<div>
+    <table class="table table-striped table-condensed table-hover">
+        <thead>
+            <tr>
+                <th colspan="3" style="text-align:center">TARGET</th>
+            </tr>
+            <tr>
+                <th>Number</th>
+                <th>Excess</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var i in Model)
+            {
+                string style = i.Excess > 0 ? "color:Red" : null;
+                <tr>
+                    <td> @Html.DisplayFor(m => i.Number)</td>
+                    <td style="@style"> @Html.DisplayFor(m => i.Excess)</td>
+                </tr>
+
+            }
+        </tbody>
+
+    </table>
+</div>

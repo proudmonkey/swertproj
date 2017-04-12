@@ -22,7 +22,6 @@ namespace Swertres.Web
         {
             if (HttpContext.Current.Request.IsAuthenticated)
             {
-                if (!Models.DataManager.CurrentUser.IsAuthenticated)
                     Models.DataManager.User.SetCurrentUser();
             }
           

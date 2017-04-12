@@ -7,10 +7,9 @@ namespace Swertres.Web.Models.ViewModels
 {
     public class BetSummaryModel
     {
-        public int? Number { get; set; }
-        public decimal TotalAmountNormal { get; set; }
-        public decimal TotalAmountRumble { get; set; }
-        public decimal? TotalAmountNormalExcess { get; set; }
-        public decimal? TotalAmountRumbleExcess { get; set; }
+        public string Number { get; set; }
+        public decimal? Total { get; set; }
+        public decimal? Excess { get; set; }
+        public bool? IsDouble { get; set; }
     }
 }

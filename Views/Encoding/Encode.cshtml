@@ -41,25 +41,24 @@
         <div class="row">
             <div class="col-xs-2">
                 @Html.LabelFor(model => model.Bet.Number, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.Bet.Number, new { htmlAttributes = new { @class = "form-control input-lg", @maxlength = "3", @inputmode = "numeric", @pattern = "([0-9]{3})" } })
+                @Html.EditorFor(model => model.Bet.Number, new { htmlAttributes = new { @class = "form-control input-lg", @maxlength = "3"} })
                 @Html.ValidationMessageFor(model => model.Bet.Number, "", new { @class = "text-danger" })
             </div>
             <div class="col-xs-2">
-                @Html.LabelFor(model => model.Bet.Amount, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.Bet.Amount, new { htmlAttributes = new { @class = "form-control input-lg", @maxlength = "3", @inputmode = "numeric" } })
-                @Html.ValidationMessageFor(model => model.Bet.Amount, "", new { @class = "text-danger" })
+                @Html.LabelFor(model => model.Bet.AmountTarget, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Bet.AmountTarget, new { htmlAttributes = new { @class = "form-control input-lg", @maxlength = "4", @inputmode = "numeric" } })
+                @Html.ValidationMessageFor(model => model.Bet.AmountTarget, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-xs-2">
+                @Html.LabelFor(model => model.Bet.AmountRumble, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.Bet.AmountRumble, new { htmlAttributes = new { @class = "form-control input-lg", @maxlength = "4", @inputmode = "numeric" } })
+                @Html.ValidationMessageFor(model => model.Bet.AmountRumble, "", new { @class = "text-danger" })
             </div>
             <div class="col-xs-2">
                 @Html.LabelFor(model => model.Bet.IsDouble, htmlAttributes: new { @class = "control-label" })
                 <br />
                 @Html.CheckBoxFor(model => model.Bet.IsDouble)
                 @Html.ValidationMessageFor(model => model.Bet.IsDouble, "", new { @class = "text-danger" })
-            </div>
-            <div class="col-xs-2">
-                @Html.LabelFor(model => model.Bet.IsRumble, htmlAttributes: new { @class = "control-label" })
-                <br />
-                @Html.CheckBoxFor(model => model.Bet.IsRumble)
-                @Html.ValidationMessageFor(model => model.Bet.IsRumble, "", new { @class = "text-danger" })
             </div>
             <div class="col-xs-2">
                 <div style="margin-top:25px;">
@@ -70,94 +69,166 @@
     </div>
 }
 
+<div class="clearfix"></div>
 <hr/>
 <div class="row">
-    <div class="col-lg-2">
+    <div class="col-xs-2">
         <label class="control-label">Filter By Coordinator:</label>
     </div>
     <div class="col-xs-2">
         @Html.DropDownListFor(model => model.Coordinators.SelectedSourceID,
-                        new SelectList(Model.Coordinators.Sources, "SourceID", "SourceName"), "-All-", new { @class = "form-control", @id="ddlSourceSearch", @name= "ddlSourceSearch" })
+                        new SelectList(Model.Coordinators.Sources, "SourceID", "SourceName"), "-All-", new { @class = "form-control", @id = "ddlSourceSearch", @name = "ddlSourceSearch" })
     </div>
+    <div class="col-xs-2">
+        <div style="text-align:right"><label class="control-label">Search Hit:</label></div>
     </div>
-<div id="divBetList">
-    @Html.Action("EncodePartial", "Encoding", new { drawID = Model.Draw.DrawID })
+    <div class="col-xs-2">
+        <input type="text" class="form-control input-sm" maxlength="3" inputmode="numeric" id="txtSearchHit" />
+    </div>
+    <div class="col-xs-2">
+        <button type="button" class="btn btn-info btn-sm" id="btnSearchHit">Search</button>
+    </div>
+    <div id="divBetList">
+        @Html.Action("EncodePartial", "Encoding", new { drawID = Model.Draw.DrawID })
+    </div>
 </div>
-
 
 @section scripts
 {
-    <script>
-        $(document).ready(function () {
-            CheckActiveDraw();
-            clearText();
+            <script>
+                var _isDouble = false;
+                $(document).ready(function () {
+                    CheckActiveDraw();
+                    clearText();
 
-        var cbDouble = $("#Bet_IsDouble");
-        var cbRumble = $("#Bet_IsRumble");
+                    var cbDouble = $("#Bet_IsDouble");
 
-        $("#Bet_Number").keyup(function (e) {
-            if (/\D/g.test(this.value)) {
-                // Filter non-digits from input value.
-                this.value = this.value.replace(/\D/g, '');
-            }
-            else {
-                if (!isUnique($(this).val())) {
-                    cbDouble.prop('checked', true);
-                    cbRumble.prop('checked', true);
+                    $("#Bet_Number").keyup(function (e) {
+                        if (/\D/g.test(this.value)) {
+                            // Filter non-digits from input value.
+                            this.value = this.value.replace(/\D/g, '');
+                        }
+                        else {
+                            if (!isUnique($(this).val())) {
+                                cbDouble.prop('checked', true);
+                                _isDouble = true;
+                            }
+                            else {
+                                cbDouble.removeAttr('checked');
+                                _isDouble = false;
+                            }
+                        }
+                    });
+
+                    $("#Bet_AmountTarget").keyup(function (e) {
+                        if (/\D/g.test(this.value)) {
+                            this.value = this.value.replace(/\D/g, '');
+                        }
+                        else{
+                            var r =  $("#Bet_AmountRumble");
+                            if(r.val().length > 0)
+                                cbDouble.prop('checked', true);
+                            else
+                                cbDouble.removeAttr('checked');
+                        }
+                    });
+
+                    $("#Bet_AmountRumble").keyup(function (e) {
+
+                        if (/\D/g.test(this.value)) {
+                            this.value = this.value.replace(/\D/g, '');
+                        }
+                        else{
+                            if(_isDouble)
+                                cbDouble.prop('checked', true);
+                            else
+                                cbDouble.removeAttr('checked');
+                        }
+
+                        if(this.value.length == 0)
+                            cbDouble.removeAttr('checked');
+                    });
+
+                    $("#Bet_Number").keydown(function(e){
+                        var code = e.keyCode || e.which;
+                        if(code == 32 || code == 9){
+                            $("#Bet_AmountTarget").focus();
+                        }
+                    });
+
+                    $("#Bet_AmountTarget").keydown(function(e){
+                        var code = e.keyCode || e.which;
+                        if(code == 32 || code == 9){
+                            $("#Bet_AmountRumble").focus();
+                        }
+                    });
+
+                    $("#Bet_AmountRumble").keydown(function(e){
+                        var code = e.keyCode || e.which;
+                        if(code == 32 || code == 9){
+                            $("#Bet_Number").focus();
+                        }
+                    });
+
+                    $("#ddlSourceSearch").change(function () {
+                        var drawID = @Html.Raw(Json.Encode(Model.Draw.DrawID));
+                        var sourceID = $(this).val();
+                        var url = "/Encoding/EncodePartial/?drawID=" + drawID + "&sourceID=" + sourceID;
+                        $("#divBetList").load(url);
+                    });
+
+                    $("#txtSearchHit").keyup(function(event){
+                        if (/\D/g.test(this.value)) {
+                            this.value = this.value.replace(/\D/g, '');
+                        }
+                        if(event.keyCode == 13){
+                            $("#btnSearchHit").click();
+                        }
+                    });
+
+                    $("#btnSearchHit").on("click",function () {
+                        var bet =$("#txtSearchHit").val();
+                        var drawID = @Html.Raw(Json.Encode(Model.Draw.DrawID));
+                        var sourceID = $(this).val();
+                        var url = "/Encoding/EncodePartial/?drawID=" + drawID + "&sourceID=" + sourceID + "&bet=" + bet;
+                        $("#divBetList").load(url);
+                    });
+                });
+
+
+                function clearText() {
+                    $("#Bet_Number").val("");
+                    $("#Bet_AmountTarget").val("");
+                    $("#Bet_AmountRumble").val("");
+                    $("#Bet_IsDouble").removeAttr('checked');
+                    $("#Bet_Number").focus();
                 }
-                else {
-                    cbDouble.removeAttr('checked');
-                    cbRumble.removeAttr('checked');
+
+                function isUnique(str) {
+                    var hashtable = {};
+
+                    for (var i = 0, len = str.length; i < len; i++) {
+                        if (hashtable[str[i]] != null) {
+                            hashtable[str[i]] = 1;
+                            return false;
+                        }
+                        else{
+                            hashtable[str[i]] = 0;
+                        }
+                    }
+                    return true;
                 }
-            }
-        });
 
-        $("#Bet_Amount").keyup(function (e) {
-            if (/\D/g.test(this.value)) {
-                this.value = this.value.replace(/\D/g, '');
-            }
-        });
+                function CheckActiveDraw(){
 
-        $("#ddlSourceSearch").change(function () {
-            var drawID = @Html.Raw(Json.Encode(Model.Draw.DrawID));
-            var sourceID = $(this).val();
-            var url = "/Encoding/EncodePartial/?drawID=" + drawID + "&sourceID=" + sourceID;
-            $("#divBetList").load(url);
-        });
-    });
-
-
-    function clearText() {
-        $("#Bet_Number").val("");
-        $("#Bet_Amount").val("");
-        $("#Bet_IsDouble").removeAttr('checked');
-        $("#Bet_IsRumble").removeAttr('checked');
-        $("#Bet_Number").focus();
-    }
-
-    function isUnique(str) {
-        var hashtable = {};
-        for (var i = 0, len = str.length; i < len; i++) {
-            if (hashtable[str[i]] != null) {
-                hashtable[str[i]] = 1;
-                return false;
-            } else {
-                hashtable[str[i]] = 0;
-            }
+                    var cn = $("#Draw_ControlNumber").val();
+                    if(cn.length == 0){
+                        $("#divMain :input").prop('disabled',true);
+                        $("#divAlert").toggleClass("hidden");
+                    }
+                    else{
+                        $("#divMain :input").removeAttr('disabled');
+                    }
+                }
+            </script>
         }
-        return true;
-    }
-
-    function CheckActiveDraw(){
-
-        var cn = $("#Draw_ControlNumber").val();
-        if(cn.length == 0){
-            $("#divMain :input").prop('disabled',true);
-            $("#divAlert").toggleClass("hidden");
-        }
-        else{
-            $("#divMain :input").removeAttr('disabled');
-        }
-    }
-    </script>
-}

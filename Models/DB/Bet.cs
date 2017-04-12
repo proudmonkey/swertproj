@@ -16,8 +16,9 @@ namespace Swertres.Web.Models.DB
     {
         public long BetID { get; set; }
         public long DrawID { get; set; }
-        public Nullable<int> Number { get; set; }
-        public Nullable<decimal> Amount { get; set; }
+        public string Number { get; set; }
+        public Nullable<decimal> AmountTarget { get; set; }
+        public Nullable<decimal> AmountRumble { get; set; }
         public bool IsRumble { get; set; }
         public Nullable<long> RowCreatedUserID { get; set; }
         public Nullable<long> RowModifiedUserID { get; set; }

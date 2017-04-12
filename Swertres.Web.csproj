@@ -189,43 +189,52 @@
     <Compile Include="Models\DataManager\AdminManager.cs" />
     <Compile Include="Models\DataManager\EncodingManager.cs" />
     <Compile Include="Models\DB\Bet.cs">
-      <DependentUpon>SwertresDB.tt</DependentUpon>
+      <DependentUpon>Swertes.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\BetLimit.cs">
-      <DependentUpon>SwertresDB.tt</DependentUpon>
+      <DependentUpon>Swertes.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\Draw.cs">
-      <DependentUpon>SwertresDB.tt</DependentUpon>
+      <DependentUpon>Swertes.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DB\GetBetOverAllSummary_Result.cs">
-      <DependentUpon>SwertresDB.tt</DependentUpon>
+    <Compile Include="Models\DB\GetDoubleBetSummary_Result.cs">
+      <DependentUpon>Swertes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DB\GetRumbleBetSummary_Result.cs">
+      <DependentUpon>Swertes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DB\GetTargetBetSummary_Result.cs">
+      <DependentUpon>Swertes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DB\GetTargetBetSummary_Result1.cs">
+      <DependentUpon>Swertes.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\Role.cs">
-      <DependentUpon>SwertresDB.tt</DependentUpon>
+      <DependentUpon>Swertes.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\Source.cs">
-      <DependentUpon>SwertresDB.tt</DependentUpon>
+      <DependentUpon>Swertes.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DB\SwertresDB.Context.cs">
+    <Compile Include="Models\DB\Swertes.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>SwertresDB.Context.tt</DependentUpon>
+      <DependentUpon>Swertes.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DB\SwertresDB.cs">
+    <Compile Include="Models\DB\Swertes.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>SwertresDB.tt</DependentUpon>
+      <DependentUpon>Swertes.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DB\SwertresDB.Designer.cs">
+    <Compile Include="Models\DB\Swertes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>SwertresDB.edmx</DependentUpon>
+      <DependentUpon>Swertes.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\User.cs">
-      <DependentUpon>SwertresDB.tt</DependentUpon>
+      <DependentUpon>Swertes.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\UserRole.cs">
-      <DependentUpon>SwertresDB.tt</DependentUpon>
+      <DependentUpon>Swertes.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Helpers\Security.cs" />
     <Compile Include="Models\ViewModels\BetSummaryModel.cs" />
@@ -243,26 +252,26 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\DB\SwertresDB.Context.tt">
+    <Content Include="Models\DB\Swertes.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>SwertresDB.edmx</DependentUpon>
-      <LastGenOutput>SwertresDB.Context.cs</LastGenOutput>
+      <DependentUpon>Swertes.edmx</DependentUpon>
+      <LastGenOutput>Swertes.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\DB\SwertresDB.tt">
+    <Content Include="Models\DB\Swertes.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>SwertresDB.edmx</DependentUpon>
-      <LastGenOutput>SwertresDB.cs</LastGenOutput>
+      <DependentUpon>Swertes.edmx</DependentUpon>
+      <LastGenOutput>Swertes.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootbox.js" />
     <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <EntityDeploy Include="Models\DB\SwertresDB.edmx">
+    <EntityDeploy Include="Models\DB\Swertes.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>SwertresDB.Designer.cs</LastGenOutput>
+      <LastGenOutput>Swertes.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\DB\SwertresDB.edmx.diagram">
-      <DependentUpon>SwertresDB.edmx</DependentUpon>
+    <Content Include="Models\DB\Swertes.edmx.diagram">
+      <DependentUpon>Swertes.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -291,7 +300,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
@@ -302,10 +310,18 @@
     <Content Include="Views\Manage\Source.cshtml" />
     <Content Include="Views\Manage\SourceListPartial.cshtml" />
     <Content Include="Views\Manage\DrawListPartial.cshtml" />
-    <Content Include="Views\Encoding\BetSummaryPartial.cshtml" />
+    <Content Include="Views\Encoding\TargetBetSummaryPartial.cshtml" />
     <Content Include="Views\Encoding\BetSummary.cshtml" />
     <Content Include="Views\Manage\Dashboard.cshtml" />
-    <Content Include="Views\Encoding\BetExcessSummaryPartial.cshtml" />
+    <Content Include="Views\Encoding\BetTargetExcessSummaryPartial.cshtml" />
+    <Content Include="Views\Encoding\RumbleBetSummaryPartial.cshtml" />
+    <Content Include="Views\Encoding\DoubleBetSummaryPartial.cshtml" />
+    <Content Include="Views\Manage\Users.cshtml" />
+    <Content Include="Views\Manage\UserListPartial.cshtml" />
+    <Content Include="Views\Encoding\BetRumbleExcessSummaryPartial.cshtml" />
+    <Content Include="Views\Home\UnAuthorized.cshtml" />
+    <Content Include="Views\Encoding\Coordinator.cshtml" />
+    <Content Include="Views\Encoding\CoordinatorPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

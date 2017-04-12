@@ -34,14 +34,17 @@ namespace Swertres.Web.Models.DataManager
     {
         public static void SetCurrentUser()
         {
-            string userName = HttpContext.Current.User.Identity.Name;
-            using (SwertresEntities db = new SwertresEntities())
+            if (HttpContext.Current.User.Identity.IsAuthenticated)
             {
-                var user = db.Users.Where(o => o.UserName.ToLower().Equals(userName.ToLower())).Single();
+                string userName = HttpContext.Current.User.Identity.Name;
+                using (SwertresEntities db = new SwertresEntities())
+                {
+                    var user = db.Users.Where(o => o.UserName.ToLower().Equals(userName.ToLower())).Single();
 
-                CurrentUser.ID = user.UserID;
-                CurrentUser.Name = $"{user.FirstName} {user.LastName}";
-                CurrentUser.IsAuthenticated = true;
+                    CurrentUser.ID = user.UserID;
+                    CurrentUser.Name = $"{user.FirstName} {user.LastName}";
+                    CurrentUser.IsAuthenticated = true;
+                }
             }
         }
     }

@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "Coordinator";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model Swertres.Web.Models.ViewModels.EncodeDetailModel
+<h2>Coordinator List</h2>
+<div class="row">
+    <div class="col-xs-2">
+        <label class="control-label">Filter By Coordinator:</label>
+    </div>
+    <div class="col-xs-2">
+        @Html.DropDownListFor(model => model.Coordinators.SelectedSourceID,
+                        new SelectList(Model.Coordinators.Sources, "SourceID", "SourceName"), "-All-", new { @class = "form-control", @id = "ddlSourceSearch", @name = "ddlSourceSearch" })
+    </div>
+    <div class="col-xs-2">
+        <div style="text-align:right"><label class="control-label">Search Hit:</label></div>
+    </div>
+    <div class="col-xs-2">
+        <input type="text" class="form-control input-sm" maxlength="3" inputmode="numeric" id="txtSearchHit" />
+    </div>
+    <div class="col-xs-2">
+        <button type="button" class="btn btn-info btn-sm" id="btnSearchHit">Search</button>
+    </div>
+    <div id="divBetList">
+        @Html.Action("CoordinatorPartial", "Encoding", new { drawID = Model.Draw.DrawID })
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script> 
+        $(document).ready(function () {
+            $("#ddlSourceSearch").change(function () {
+                var drawID = @Html.Raw(Json.Encode(Model.Draw.DrawID));
+                var sourceID = $(this).val();
+                var url = "/Encoding/CoordinatorPartial/?drawID=" + drawID + "&sourceID=" + sourceID;
+                $("#divBetList").load(url);
+            });
+
+            $("#txtSearchHit").keyup(function(event){
+                if (/\D/g.test(this.value)) {
+                    this.value = this.value.replace(/\D/g, '');
+                }
+                if(event.keyCode == 13){
+                    $("#btnSearchHit").click();
+                }
+            });
+
+            $("#btnSearchHit").on("click",function () {
+                var bet =$("#txtSearchHit").val();
+                var drawID = @Html.Raw(Json.Encode(Model.Draw.DrawID));
+                var sourceID = $(this).val();
+                var url = "/Encoding/CoordinatorPartial/?drawID=" + drawID + "&sourceID=" + sourceID + "&bet=" + bet;
+                $("#divBetList").load(url);
+            });
+        });
+    </script>
+}

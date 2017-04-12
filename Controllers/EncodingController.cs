@@ -18,9 +18,12 @@ namespace Swertres.Web.Controllers
             _am = new AdminManager();
         }
 
+        #region Encoding
         // GET: Encoding
+        [Authorize]
         public ActionResult Encode()
         {
+          
             var drawModel = _am.GetActiveDraw();
             var sourceModel = _am.GetSource();
 
@@ -35,40 +38,98 @@ namespace Swertres.Web.Controllers
             var sourceModel = _am.GetSource();
 
             var dtoDefualt = new EncodeDetailModel { Bet = new EncodeModel(), Draw = drawModel, Coordinators = new SourceModelValidation { Sources = sourceModel } };
+            if (dto.Bet.AmountRumble == null && dto.Bet.AmountTarget == null)
+            {
+                ModelState.AddModelError("", "You must enter a Target or Rumble amount.");
+                return View(dtoDefualt);
+            }
+
             if (ModelState.IsValid)
             {
                 _em.AddBet(dto);
-                SigHub.SummaryHub.Update();
+                bool isRumble = dto.Bet.AmountRumble > 0 ? true : false;
+
+                if (dto.Bet.AmountTarget > 0)
+                    SigHub.SummaryHub.UpdateTargetSummary();
+
+                if (isRumble)
+                    SigHub.SummaryHub.UpdateRumbleSummary();
+
+                if (dto.Bet.IsDouble)
+                    SigHub.SummaryHub.UpdateDoubleSummary();
             }
 
             return View(dtoDefualt);
         }
 
-        public ActionResult EncodePartial(long drawID,long userID =0, long sourceID = 0)
+        public ActionResult EncodePartial(long drawID,long userID =0, long sourceID = 0, string bet = "")
         {
             long currentUserID = (userID > 0)? userID: CurrentUser.ID;
 
-            var dto = _em.GetBetList(drawID, currentUserID, sourceID);
+            var dto = _em.GetBetList(drawID, currentUserID, sourceID, bet);
             return PartialView(dto);
         }
 
+        #endregion
+
+        #region Coordinator
+        [Authorize]
+        public ActionResult Coordinator()
+        {
+
+            var drawModel = _am.GetActiveDraw();
+            var sourceModel = _am.GetSource();
+
+            var dto = new EncodeDetailModel { Bet = new EncodeModel(), Draw = drawModel, Coordinators = new SourceModelValidation { Sources = sourceModel } };
+            return View(dto);
+        }
+
+        public ActionResult CoordinatorPartial(long drawID, long sourceID = 0, string bet = "")
+        {
+            var dto = _em.GetOverAllBetList(drawID, sourceID, bet);
+            return PartialView(dto);
+        }
+        #endregion
+
+        #region Summary
+        [Authorize]
         public ActionResult BetSummary()
         {
             var dto = _am.GetActiveDraw();
             return View(dto);
         }
 
-        public ActionResult BetSummaryPartial(long drawID)
+        public ActionResult TargetBetSummaryPartial(long drawID)
         {
-            var dto = _em.GetOverAllBetSummary(drawID);
+            var dto = _em.GetBetSummary(drawID, EncodingManager.BetType.Target);
             return PartialView(dto);
         }
 
-        public ActionResult BetExcessSummaryPartial(long drawID)
+        public ActionResult RumbleBetSummaryPartial(long drawID)
         {
-            var dto = _em.GetOverAllBetSummary(drawID);
+            var dto = _em.GetBetSummary(drawID, EncodingManager.BetType.Rumble);
             return PartialView(dto);
         }
+
+        public ActionResult DoubleBetSummaryPartial(long drawID)
+        {
+            var dto = _em.GetBetSummary(drawID, EncodingManager.BetType.Double);
+            return PartialView(dto);
+        }
+
+        public ActionResult BetTargetExcessSummaryPartial(long drawID)
+        {
+            var dto = _em.GetBetSummary(drawID, EncodingManager.BetType.Target).Where(o => o.Excess > 0).ToList();
+            return PartialView(dto);
+        }
+
+        public ActionResult BetRumbleExcessSummaryPartial(long drawID)
+        {
+            var dto = _em.GetBetSummary(drawID, EncodingManager.BetType.Rumble).Where(o => o.Excess > 0).ToList();
+            return PartialView(dto);
+        }
+
+        #endregion
 
         public ActionResult HasActiveDraw()
         {

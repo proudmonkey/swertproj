@@ -17,5 +17,6 @@ namespace Swertres.Web.Models.DB
         public int BetLimitID { get; set; }
         public Nullable<int> NormalLimit { get; set; }
         public Nullable<int> RumbleLimit { get; set; }
+        public Nullable<int> DoubleLimit { get; set; }
     }
 }

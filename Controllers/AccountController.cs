@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Swertres.Web.Models.ViewModels;
 using Swertres.Web.Models.DataManager;
 using System.Web.Security;
+using Swertres.Web.Models.Helpers;
 
 namespace Swertres.Web.Controllers
 {
@@ -33,7 +34,7 @@ namespace Swertres.Web.Controllers
                     ModelState.AddModelError("", "The username or password provided is incorrect.");
                 else
                 {
-                    if (dto.Password.Equals(password))
+                    if (Security.VerifySaltedHash(password,dto.Password))
                     {
                         FormsAuthentication.RedirectFromLoginPage(dto.UserName, true);
                     }
@@ -52,7 +53,7 @@ namespace Swertres.Web.Controllers
         public ActionResult SignOut()
         {
             FormsAuthentication.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
     }
 }

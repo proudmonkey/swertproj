@@ -122,16 +122,17 @@
                         }
                     },
                     callback: function (result) {
-                        alert(id);
-                        $.ajax({
-                            type: "POST",
-                            url: "@(Url.Action("CloseCurrentDraw", "Manage"))",
-                            data: { drawID: id },
-                            success: function (data) {
-                                $("#divAlert").toggleClass("hidden");
-                            },
-                            error: function (error) { }
-                        });
+                        if (result == true) {
+                            $.ajax({
+                                type: "POST",
+                                url: "@(Url.Action("CloseCurrentDraw", "Manage"))",
+                                data: { drawID: id },
+                                success: function (data) {
+                                    $("#divAlert").toggleClass("hidden");
+                                },
+                                error: function (error) { }
+                            });
+                        }
                     }
                 });
             });

@@ -8,6 +8,8 @@
             <tr>
                 <th>ID</th>
                 <th>Name</th>
+                <th>Share (%)</th>
+                <th colspan="2"></th>
             </tr>
         </thead>
         <tbody>
@@ -16,8 +18,9 @@
                 <tr>
                     <td> @Html.DisplayFor(m => i.SourceID)</td>
                     <td> @Html.DisplayFor(m => i.SourceName)</td>
-                    <td><a href="javascript:void(0)" class="lnkEdit">Edit</a></td>
-                    <td><a href="javascript:void(0)" class="lnkDelete">Delete</a></td>
+                    <td> @Html.DisplayFor(m => i.Share) %</td>
+                    <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" id="btnEdit">Edit</button></td>
+                    <td><button type="button" class="btn btn-info btn-sm" id="btnCloseDraw">Delete</button></td>
                 </tr>
             }
         </tbody>

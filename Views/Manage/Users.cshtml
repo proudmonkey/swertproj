@@ -1,0 +1,145 @@
+﻿
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@model Swertres.Web.Models.ViewModels.NewUserModel
+<h2>Manage Users</h2>
+<div id="divAlert" class="alert alert-success hidden">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Success!</strong>
+</div>
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="col-xs-2">
+            @Html.LabelFor(model => model.User.UserName, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.User.UserName, new { htmlAttributes = new { @class = "form-control input-lg" } })
+            @Html.ValidationMessageFor(model => model.User.UserName, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-xs-2">
+            @Html.LabelFor(model => model.User.Password, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.User.Password, new { htmlAttributes = new { @class = "form-control input-lg" } })
+            @Html.ValidationMessageFor(model => model.User.Password, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-xs-2">
+            @Html.LabelFor(model => model.User.FirstName, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.User.FirstName, new { htmlAttributes = new { @class = "form-control input-lg" } })
+            @Html.ValidationMessageFor(model => model.User.FirstName, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-xs-2">
+            @Html.LabelFor(model => model.User.LastName, htmlAttributes: new { @class = "control-label" })
+            @Html.EditorFor(model => model.User.LastName, new { htmlAttributes = new { @class = "form-control input-lg" } })
+            @Html.ValidationMessageFor(model => model.User.LastName, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-xs-2">
+            @Html.LabelFor(model => model.Role.SelectedRoleID, htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownListFor(model => model.Role.SelectedRoleID,
+                        new SelectList(Model.Role.Roles, "RoleID", "RoleName"), "-Select-", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Role.SelectedRoleID, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-xs-2">
+            <div style="margin-top:25px;">
+                <input type="submit" value="Add" class="btn btn-primary btn-lg" />
+            </div>
+        </div>
+    </div>
+
+}
+
+<div id="divUserList">
+    @Html.Action("UserListPartial", "Manage")
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit User</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="hidSelectedUserID" />
+                    First Name<input type="text" id="txtFirstName" class="form-control input-sm" />
+                </div>
+                <div class="row">
+                    Last Name<input type="text" id="txtLastName"  class="form-control input-sm" />
+                </div>
+                <div class="row">
+                    User Name<input type="text" id="txtUserName"  class="form-control input-sm" />
+                </div>
+                <div  class="row">
+                    @Html.LabelFor(model => model.Role.SelectedRoleID, htmlAttributes: new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.Role.SelectedRoleID,
+                        new SelectList(Model.Role.Roles, "RoleID", "RoleName"), new { @class = "form-control", @id="ddlRole" })
+                    @Html.ValidationMessageFor(model => model.Role.SelectedRoleID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnUpdate" class="btn btn-default" data-dismiss="modal">Update</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+    $(document).ready(function () {
+        //$("input[type=text]").each(function () {
+        //    $(this).val("");
+        //});
+        $(document).on('click', '#btnEdit', function(){
+            var row = $(this).closest('tr');
+            var id = row.find("#i_UserID").val();
+
+            $("#hidSelectedUserID").val(id);
+            $("#txtFirstName").val(row.find("#i_FirstName").val());
+            $("#txtLastName").val(row.find("#i_LastName").val());
+            $("#txtUserName").val(row.find("td:eq(3)").html().trim()); 
+            $("#ddlRole").val(row.find("#i_RoleID").val());
+            $('#myModal').modal('toggle');
+            return false;
+         });
+        
+
+        $("#btnUpdate").on("click", function () {
+               
+            var id = $("#hidSelectedUserID").val();
+            var fName = $("#txtFirstName").val();
+            var lName = $("#txtLastName").val();
+            var userName = $("#txtUserName").val();
+            var roleID = $("#ddlRole").val();
+
+            $.ajax({
+                type: "POST",
+                url: "@(Url.Action("UpdateUser", "Manage"))",
+                data: { userID: id, roleID: roleID, firstName: fName, lastName: lName, userName: userName },
+                success: function (data) {
+                var url = "/Manage/UserListPartial/";
+                $("#divUserList").load(url, function (responseTxt, statusTxt, xhr) {
+                    if(statusTxt == "success")
+                        $("#divAlert").toggleClass("hidden");
+                });
+            },
+            error: function (error) { }
+        });
+    
+    });
+    });
+
+
+    </script>
+}

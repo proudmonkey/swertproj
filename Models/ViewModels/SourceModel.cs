@@ -18,6 +18,7 @@ namespace Swertres.Web.Models.ViewModels
     {
         public long SourceID { get; set; }
         public string SourceName { get; set; }
+        public int? Share { get; set; }
     }
 
     public class SourceListModel
@@ -30,6 +31,9 @@ namespace Swertres.Web.Models.ViewModels
         [Display(Name = "Name")]
         [Required(ErrorMessage = "* required")]
         public string SourceName { get; set; }
+        [Display(Name = "Share")]
+        [Required(ErrorMessage = "* required")]
+        public int? Share { get; set; }
     }
 
   

@@ -9,15 +9,22 @@ namespace Swertres.Web.SigHub
 {
     public class SummaryHub : Hub
     {
-        public void Hello()
-        {
-            Clients.All.hello();
-        }
-
-        public static void Update()
+        public static void UpdateTargetSummary()
         {
             IHubContext context = GlobalHost.ConnectionManager.GetHubContext<SummaryHub>();
-            context.Clients.All.updateSummaryData();
+            context.Clients.All.updateTargetSummaryData();
+        }
+
+        public static void UpdateRumbleSummary()
+        {
+            IHubContext context = GlobalHost.ConnectionManager.GetHubContext<SummaryHub>();
+            context.Clients.All.updateRumbleSummaryData();
+        }
+
+        public static void UpdateDoubleSummary()
+        {
+            IHubContext context = GlobalHost.ConnectionManager.GetHubContext<SummaryHub>();
+            context.Clients.All.updateDoubleSummaryData();
         }
     }
 }

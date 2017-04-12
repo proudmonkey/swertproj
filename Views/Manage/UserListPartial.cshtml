@@ -1,0 +1,35 @@
+﻿
+
+@model IEnumerable<Swertres.Web.Models.ViewModels.UserModel>
+<div>
+    <h3>List of Users</h3>
+    <table class="table table-striped table-condensed table-hover">
+        <thead>
+            <tr>
+                <th colspan="3">Name</th>
+                <th>User Name</th>
+                <th>Role</th>
+                <th>Reset Date</th>
+                <th>Reset By</th>
+                <th colspan="3">Is Locked?</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr>
+                    <td> @Html.DisplayFor(m => i.FullName) @Html.HiddenFor(m => i.UserID) @Html.HiddenFor(m => i.RoleID)</td>
+                    <td> @Html.HiddenFor(m => i.FirstName)</td>
+                    <td> @Html.HiddenFor(m => i.LastName)</td>
+                    <td> @Html.DisplayFor(m => i.UserName)</td>
+                    <td> @Html.DisplayFor(m => i.RoleName)</td>
+                    <td> @Html.DisplayFor(m => i.ResetDate)</td>
+                    <td> @Html.DisplayFor(m => i.ResetByName)</td>
+                    <td> @Html.DisplayFor(m => i.IsLocked)</td>
+                    <td><button type="button" class="btn btn-info btn-sm" data-toggle="modal" id="btnEdit">Edit</button></td>
+                    <td><button type="button" class="btn btn-info btn-sm" id="btnCloseDraw">Delete</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

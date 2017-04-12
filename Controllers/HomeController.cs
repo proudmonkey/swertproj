@@ -18,5 +18,10 @@ namespace Swertres.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult UnAuthorized()
+        {
+            return View();
+        }
     }
 }

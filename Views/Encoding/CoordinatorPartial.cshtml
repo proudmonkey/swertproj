@@ -1,13 +1,11 @@
-﻿
-@*@model List<Swertres.Web.Models.ViewModels.BetModel>*@
-@model Swertres.Web.Models.ViewModels.BetListModel
+﻿@model Swertres.Web.Models.ViewModels.BetListModel
 
 
 <div class="clearfix"></div>
 <hr />
 <div class="row">
     <div class="col-lg-2">
-        <label class="control-label">Total Gross: </label> @string.Format("P{0:#,###.00}",Model.Total)
+        <label class="control-label">Total Gross: </label> @string.Format("P{0:#,###.00}", Model.Total)
     </div>
     <div class="col-lg-2">
         <label class="control-label">Share: </label> @string.Format("P{0:#,###.00}", Model.Share)
@@ -24,23 +22,22 @@
                 <th>Number</th>
                 <th>Target</th>
                 <th>Rumble</th>
-                <th>Is Double?</th>
                 <th>Source</th>
+                <th>Encoder</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var i in Model.BetList)
-        {
+            {
                 <tr>
                     <td> @Html.DisplayFor(m => i.Number)</td>
                     <td> @Html.DisplayFor(m => i.AmountTarget)</td>
                     <td> @Html.DisplayFor(m => i.AmountRumble)</td>
-                    <td> @Html.DisplayFor(m => i.IsDouble)</td>
                     <td> @Html.DisplayFor(m => i.SourceName)</td>
-                    <td><a href="javascript:void(0)" class="lnkEdit">Edit</a></td>
-                    <td><a href="javascript:void(0)" class="lnkDelete">Delete</a></td>
+                    <td> @Html.DisplayFor(m => i.EncoderName)</td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
+

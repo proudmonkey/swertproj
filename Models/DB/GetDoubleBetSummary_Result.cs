@@ -10,12 +10,11 @@
 namespace Swertres.Web.Models.DB
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Source
+    public partial class GetDoubleBetSummary_Result
     {
-        public long SourceID { get; set; }
-        public string SourceName { get; set; }
-        public Nullable<int> Share { get; set; }
+        public Nullable<int> Number { get; set; }
+        public Nullable<int> Total { get; set; }
+        public Nullable<int> TotalExcess { get; set; }
     }
 }

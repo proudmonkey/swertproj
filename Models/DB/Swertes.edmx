@@ -11,8 +11,9 @@
           </Key>
           <Property Name="BetID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DrawID" Type="bigint" Nullable="false" />
-          <Property Name="Number" Type="int" />
-          <Property Name="Amount" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Number" Type="varchar" MaxLength="3" />
+          <Property Name="AmountTarget" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="AmountRumble" Type="decimal" Precision="18" Scale="0" />
           <Property Name="IsRumble" Type="bit" Nullable="false" />
           <Property Name="RowCreatedUserID" Type="bigint" />
           <Property Name="RowModifiedUserID" Type="bigint" />
@@ -28,6 +29,7 @@
           <Property Name="BetLimitID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="NormalLimit" Type="int" />
           <Property Name="RumbleLimit" Type="int" />
+          <Property Name="DoubleLimit" Type="int" />
         </EntityType>
         <EntityType Name="Draw">
           <Key>
@@ -56,6 +58,7 @@
           </Key>
           <Property Name="SourceID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="SourceName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Share" Type="int" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -63,9 +66,13 @@
           </Key>
           <Property Name="UserID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
           <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
           <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="PasswordResetDate" Type="datetime" />
+          <Property Name="PasswordResetUserID" Type="bigint" />
+          <Property Name="IsLocked" Type="bit" />
+          <Property Name="LockedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="UserRole">
           <Key>
@@ -77,6 +84,18 @@
         </EntityType>
         <Function Name="GetBetOverAllSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DrawID" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="GetDoubleBetSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DrawID" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="GetRumbleBetSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DrawID" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="GetTargetBetSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DrawID" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="SortNumer" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
+          <Parameter Name="number" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="SwertresModelStoreContainer">
           <EntitySet Name="Bet" EntityType="Self.Bet" Schema="dbo" store:Type="Tables" />
@@ -97,8 +116,9 @@
           </Key>
           <Property Name="BetID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="DrawID" Type="Int64" Nullable="false" />
-          <Property Name="Number" Type="Int32" />
-          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Number" Type="String" MaxLength="3" Unicode="false" FixedLength="false" />
+          <Property Name="AmountTarget" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="AmountRumble" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="IsRumble" Type="Boolean" Nullable="false" />
           <Property Name="RowCreatedUserID" Type="Int64" />
           <Property Name="RowModifiedUserID" Type="Int64" />
@@ -106,6 +126,15 @@
           <Property Name="RowModifiedDateTime" Type="DateTime" Precision="3" />
           <Property Name="IsDouble" Type="Boolean" Nullable="false" />
           <Property Name="SourceID" Type="Int64" />
+        </EntityType>
+        <EntityType Name="BetLimit">
+          <Key>
+            <PropertyRef Name="BetLimitID" />
+          </Key>
+          <Property Name="BetLimitID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NormalLimit" Type="Int32" />
+          <Property Name="RumbleLimit" Type="Int32" />
+          <Property Name="DoubleLimit" Type="Int32" />
         </EntityType>
         <EntityType Name="Draw">
           <Key>
@@ -128,15 +157,27 @@
           <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="RoleDescription" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="Source">
+          <Key>
+            <PropertyRef Name="SourceID" />
+          </Key>
+          <Property Name="SourceID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SourceName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Share" Type="Int32" />
+        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="UserID" />
           </Key>
           <Property Name="UserID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordResetDate" Type="DateTime" Precision="3" />
+          <Property Name="PasswordResetUserID" Type="Int64" />
+          <Property Name="IsLocked" Type="Boolean" />
+          <Property Name="LockedDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="UserRole">
           <Key>
@@ -148,37 +189,45 @@
         </EntityType>
         <EntityContainer Name="SwertresEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Bets" EntityType="Self.Bet" />
+          <EntitySet Name="BetLimits" EntityType="Self.BetLimit" />
           <EntitySet Name="Draws" EntityType="Self.Draw" />
           <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="Sources" EntityType="Self.Source" />
           <EntitySet Name="Users" EntityType="Self.User" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRole" />
-          <EntitySet Name="Sources" EntityType="SwertresModel.Source" />
-          <EntitySet Name="BetLimits" EntityType="SwertresModel.BetLimit" />
-          <FunctionImport Name="GetBetOverAllSummary" ReturnType="Collection(SwertresModel.GetBetOverAllSummary_Result)">
-            <Parameter Name="DrawID" Mode="In" Type="Int64" />
+          <FunctionImport Name="GetBetOverAllSummary">
+          <Parameter Name="DrawID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="GetDoubleBetSummary" ReturnType="Collection(SwertresModel.GetDoubleBetSummary_Result)">
+          <Parameter Name="DrawID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="GetRumbleBetSummary" ReturnType="Collection(SwertresModel.GetRumbleBetSummary_Result)">
+          <Parameter Name="DrawID" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="GetTargetBetSummary" ReturnType="Collection(SwertresModel.GetTargetBetSummary_Result1)">
+          <Parameter Name="DrawID" Mode="In" Type="Int64" />
           </FunctionImport>
         </EntityContainer>
-        <EntityType Name="Source">
-          <Key>
-            <PropertyRef Name="SourceID" />
-          </Key>
-          <Property Name="SourceID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SourceName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="BetLimit">
-          <Key>
-            <PropertyRef Name="BetLimitID" />
-          </Key>
-          <Property Name="BetLimitID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NormalLimit" Type="Int32" />
-          <Property Name="RumbleLimit" Type="Int32" />
-        </EntityType>
-        <ComplexType Name="GetBetOverAllSummary_Result">
+        <ComplexType Name="GetTargetBetSummary_Result">
           <Property Type="Int32" Name="Number" Nullable="true" />
-          <Property Type="Decimal" Name="TotalAmountNormal" Nullable="false" Precision="38" Scale="0" />
-          <Property Type="Decimal" Name="TotalAmountRumble" Nullable="false" Precision="38" Scale="0" />
-          <Property Type="Decimal" Name="TotalAmountNormalExcess" Nullable="true" Precision="38" Scale="0" />
-          <Property Type="Decimal" Name="TotalAmountRumbleExcess" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="Int32" Name="TotalExcess" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetRumbleBetSummary_Result">
+          <Property Type="Int32" Name="Number" Nullable="true" />
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="Int32" Name="TotalExcess" Nullable="true" />
+          <Property Type="Boolean" Name="IsDouble" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetDoubleBetSummary_Result">
+          <Property Type="Int32" Name="Number" Nullable="true" />
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="Int32" Name="TotalExcess" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetTargetBetSummary_Result1">
+          <Property Type="Int32" Name="Number" Nullable="true" />
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="Int32" Name="TotalExcess" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -189,24 +238,34 @@
           <EntitySetMapping Name="Bets">
             <EntityTypeMapping TypeName="SwertresModel.Bet">
               <MappingFragment StoreEntitySet="Bet">
-                <ScalarProperty Name="SourceID" ColumnName="SourceID" />
-                <ScalarProperty Name="IsDouble" ColumnName="IsDouble" />
                 <ScalarProperty Name="BetID" ColumnName="BetID" />
                 <ScalarProperty Name="DrawID" ColumnName="DrawID" />
                 <ScalarProperty Name="Number" ColumnName="Number" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="AmountTarget" ColumnName="AmountTarget" />
+                <ScalarProperty Name="AmountRumble" ColumnName="AmountRumble" />
                 <ScalarProperty Name="IsRumble" ColumnName="IsRumble" />
                 <ScalarProperty Name="RowCreatedUserID" ColumnName="RowCreatedUserID" />
                 <ScalarProperty Name="RowModifiedUserID" ColumnName="RowModifiedUserID" />
                 <ScalarProperty Name="RowCreatedDateTime" ColumnName="RowCreatedDateTime" />
                 <ScalarProperty Name="RowModifiedDateTime" ColumnName="RowModifiedDateTime" />
+                <ScalarProperty Name="IsDouble" ColumnName="IsDouble" />
+                <ScalarProperty Name="SourceID" ColumnName="SourceID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BetLimits">
+            <EntityTypeMapping TypeName="SwertresModel.BetLimit">
+              <MappingFragment StoreEntitySet="BetLimit">
+                <ScalarProperty Name="BetLimitID" ColumnName="BetLimitID" />
+                <ScalarProperty Name="NormalLimit" ColumnName="NormalLimit" />
+                <ScalarProperty Name="RumbleLimit" ColumnName="RumbleLimit" />
+                <ScalarProperty Name="DoubleLimit" ColumnName="DoubleLimit" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Draws">
             <EntityTypeMapping TypeName="SwertresModel.Draw">
               <MappingFragment StoreEntitySet="Draw">
-                <ScalarProperty Name="IsEnded" ColumnName="IsEnded" />
                 <ScalarProperty Name="DrawID" ColumnName="DrawID" />
                 <ScalarProperty Name="ControlNumber" ColumnName="ControlNumber" />
                 <ScalarProperty Name="StartDateTime" ColumnName="StartDateTime" />
@@ -214,6 +273,7 @@
                 <ScalarProperty Name="RowModifiedDateTime" ColumnName="RowModifiedDateTime" />
                 <ScalarProperty Name="RowCreatedUserID" ColumnName="RowCreatedUserID" />
                 <ScalarProperty Name="RowModifiedUserID" ColumnName="RowModifiedUserID" />
+                <ScalarProperty Name="IsEnded" ColumnName="IsEnded" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -226,9 +286,22 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Sources">
+            <EntityTypeMapping TypeName="SwertresModel.Source">
+              <MappingFragment StoreEntitySet="Source">
+                <ScalarProperty Name="Share" ColumnName="Share" />
+                <ScalarProperty Name="SourceID" ColumnName="SourceID" />
+                <ScalarProperty Name="SourceName" ColumnName="SourceName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="SwertresModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="LockedDate" ColumnName="LockedDate" />
+                <ScalarProperty Name="IsLocked" ColumnName="IsLocked" />
+                <ScalarProperty Name="PasswordResetUserID" ColumnName="PasswordResetUserID" />
+                <ScalarProperty Name="PasswordResetDate" ColumnName="PasswordResetDate" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
@@ -246,31 +319,32 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Sources">
-            <EntityTypeMapping TypeName="SwertresModel.Source">
-              <MappingFragment StoreEntitySet="Source">
-                <ScalarProperty Name="SourceName" ColumnName="SourceName" />
-                <ScalarProperty Name="SourceID" ColumnName="SourceID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BetLimits">
-            <EntityTypeMapping TypeName="SwertresModel.BetLimit">
-              <MappingFragment StoreEntitySet="BetLimit">
-                <ScalarProperty Name="RumbleLimit" ColumnName="RumbleLimit" />
-                <ScalarProperty Name="NormalLimit" ColumnName="NormalLimit" />
-                <ScalarProperty Name="BetLimitID" ColumnName="BetLimitID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetBetOverAllSummary" FunctionName="SwertresModel.Store.GetBetOverAllSummary">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SwertresModel.GetBetOverAllSummary_Result">
+          <FunctionImportMapping FunctionImportName="GetBetOverAllSummary" FunctionName="SwertresModel.Store.GetBetOverAllSummary" />
+          <FunctionImportMapping FunctionImportName="GetDoubleBetSummary" FunctionName="SwertresModel.Store.GetDoubleBetSummary" >
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="SwertresModel.GetDoubleBetSummary_Result">
                 <ScalarProperty Name="Number" ColumnName="Number" />
-                <ScalarProperty Name="TotalAmountNormal" ColumnName="TotalAmountNormal" />
-                <ScalarProperty Name="TotalAmountRumble" ColumnName="TotalAmountRumble" />
-                <ScalarProperty Name="TotalAmountNormalExcess" ColumnName="TotalAmountNormalExcess" />
-                <ScalarProperty Name="TotalAmountRumbleExcess" ColumnName="TotalAmountRumbleExcess" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="TotalExcess" ColumnName="TotalExcess" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetRumbleBetSummary" FunctionName="SwertresModel.Store.GetRumbleBetSummary" >
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="SwertresModel.GetRumbleBetSummary_Result">
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="TotalExcess" ColumnName="TotalExcess" />
+                <ScalarProperty Name="IsDouble" ColumnName="IsDouble" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetTargetBetSummary" FunctionName="SwertresModel.Store.GetTargetBetSummary" >
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="SwertresModel.GetTargetBetSummary_Result1">
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="TotalExcess" ColumnName="TotalExcess" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

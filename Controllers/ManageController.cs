@@ -5,9 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using Swertres.Web.Models.DataManager;
 using Swertres.Web.Models.ViewModels;
+using Swertres.Web.Models.Helpers;
 
 namespace Swertres.Web.Controllers
 {
+    [AuthorizeRoles("Admin")]
     public class ManageController : Controller
     {
         AdminManager _am;
@@ -88,6 +90,61 @@ namespace Swertres.Web.Controllers
         {
             var dto = new SourceListModel() { SourceList = _am.GetSource() };
             return PartialView(dto);
+        }
+
+        public ActionResult UpdateSource(long sourceID, string name, string share)
+        {
+            if (share.Equals(string.Empty))
+                share = "0";
+
+            var dto = new SourceModel();
+            dto.SourceID = sourceID;
+            dto.SourceName = name;
+            dto.Share = Convert.ToInt32(share);
+
+            _am.UpdateSource(dto);
+            return Json(new { success = true });
+        }
+        #endregion
+
+        #region User
+        public ActionResult Users()
+        {
+            var dto = new NewUserModel { User = new UserModel(), Role = new UserRoleModelValidation { Roles = _am.GetRoles() } };
+            
+            return View(dto);
+        }
+
+        [HttpPost]
+        public ActionResult Users(NewUserModel dto)
+        {
+            if (ModelState.IsValid)
+            {
+                _am.AddUser(dto);
+                RedirectToAction("Users");
+            }
+
+            var dtoDefault = new NewUserModel { User = new UserModel(), Role = new UserRoleModelValidation { Roles = _am.GetRoles() } };
+            return View(dtoDefault);
+        }
+
+        public ActionResult UserListPartial()
+        {
+            var dto = _am.GetAllUsers();
+            return PartialView(dto);
+        }
+
+        public ActionResult UpdateUser(long userID, int roleID, string firstName,string lastName, string userName)
+        {
+            var dto = new UserModel();
+            dto.UserID = userID;
+            dto.RoleID = roleID;
+            dto.FirstName = firstName;
+            dto.LastName = lastName;
+            dto.UserName = userName;
+
+            _am.UpdateUser(dto);
+            return Json(new { success = true });
         }
         #endregion
     }
